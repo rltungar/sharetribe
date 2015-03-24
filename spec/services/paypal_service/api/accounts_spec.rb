@@ -5,7 +5,7 @@ describe PaypalService::API::Accounts do
   APIDataTypes = PaypalService::API::DataTypes
 
   ## API Operations (with default test data)
-  def request_personal_account(email:nil, payer_id:nil)
+  def request_personal_account(email: nil, payer_id: nil)
     email ||= @email
     payer_id ||= @payer_id
 
@@ -21,7 +21,7 @@ describe PaypalService::API::Accounts do
       }))
   end
 
-  def request_community_account(email:nil, payer_id:nil)
+  def request_community_account(email: nil, payer_id: nil)
     email ||= @email
     payer_id ||= @payer_id
 

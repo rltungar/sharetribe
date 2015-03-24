@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150323085034) do
+ActiveRecord::Schema.define(:version => 20150324112658) do
 
   create_table "auth_tokens", :force => true do |t|
     t.string   "token"
@@ -577,13 +577,15 @@ ActiveRecord::Schema.define(:version => 20150323085034) do
   add_index "messages", ["conversation_id"], :name => "index_messages_on_conversation_id"
 
   create_table "order_permissions", :force => true do |t|
-    t.integer  "paypal_account_id",  :null => false
-    t.datetime "created_at",         :null => false
-    t.datetime "updated_at",         :null => false
-    t.string   "request_token",      :null => false
-    t.string   "paypal_username_to", :null => false
+    t.integer  "paypal_account_id",                 :null => false
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+    t.string   "request_token",                     :null => false
+    t.string   "paypal_username_to",                :null => false
     t.string   "scope"
     t.string   "verification_code"
+    t.string   "onboarding_id",       :limit => 36
+    t.boolean  "permissions_granted"
   end
 
   create_table "participations", :force => true do |t|

@@ -3,9 +3,10 @@ module PaypalService::API
 
   class Accounts
 
-    def initialize(permissions, merchant, logger = PaypalService::Logger.new)
+    def initialize(permissions, merchant, onboarding, logger = PaypalService::Logger.new)
       @permissions = permissions
       @merchant = merchant
+      @onboarding = onboarding
       @logger = logger
     end
 
@@ -15,28 +16,45 @@ module PaypalService::API
     ## POST /accounts/request
 
     def request(body:)
-      with_success_permissions(
-        PaypalService::DataTypes::Permissions
-        .create_req_perm({callback: body[:callback_url] })
-      ) { |perm_req_response|
-        account = PaypalAccountStore.create(
-          opts: {
-            community_id: body[:community_id],
-            person_id: body[:person_id],
-            order_permission_request_token: perm_req_response[:request_token],
-            order_permission_paypal_username_to: perm_req_response[:username_to]
-          })
+      # TODO partnerLogoUrl
+      onboarding_link = onboarding.create_onboarding_link({
+        returnToPartnerUrl: body[:callback_url],
+        countryCode: body[:country]})
 
-        redirect_url = URLUtils.prepend_path_component(perm_req_response[:redirect_url], body[:country])
+      account = PaypalAccountStore.create(
+        opts: {
+          community_id: body[:community_id],
+          person_id: body[:person_id],
+          order_permissions_onboarding_id: onboarding_link[:merchantId]})
 
-        Result::Success.new(
-          DataTypes.create_account_request(
-          {
-            community_id: body[:community_id],
-            person_id: body[:person_id],
-            redirect_url: redirect_url
-          }))
-      }
+      Result::Success.new(
+        DataTypes.create_account_request({
+          community_id: body[:community_id],
+          person_id: body[:person_id],
+          redirect_url: onboarding_link[:redirect_url]}))
+
+      # with_success_permissions(
+      #   PaypalService::DataTypes::Permissions
+      #   .create_req_perm({callback: body[:callback_url] })
+      # ) { |perm_req_response|
+      #   account = PaypalAccountStore.create(
+      #     opts: {
+      #       community_id: body[:community_id],
+      #       person_id: body[:person_id],
+      #       order_permission_request_token: perm_req_response[:request_token],
+      #       order_permission_paypal_username_to: perm_req_response[:username_to]
+      #     })
+
+      #   redirect_url = URLUtils.prepend_path_component(perm_req_response[:redirect_url], body[:country])
+
+      #   Result::Success.new(
+      #     DataTypes.create_account_request(
+      #     {
+      #       community_id: body[:community_id],
+      #       person_id: body[:person_id],
+      #       redirect_url: redirect_url
+      #     }))
+      # }
     end
 
     ## POST /accounts/create?community_id=1&person_id=asdgaretrwersd&order_permission_request_token=AAAAAAAbDq-HJDXerDtj

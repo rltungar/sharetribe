@@ -107,19 +107,19 @@ module PaypalService::Store::PaypalAccount
   #
   class PaypalAccountFinder
 
-    def find(person_id:nil, community_id:, payer_id:)
+    def find(person_id: nil, community_id:, payer_id:)
       query_one(person_id: person_id, community_id: community_id, payer_id: payer_id)
     end
 
-    def find_pending(person_id:nil, community_id:, order_permission_request_token:)
+    def find_pending(person_id: nil, community_id:, order_permission_request_token:)
       query_one(person_id: person_id, community_id: community_id, order_permission_request_token: order_permission_request_token)
     end
 
-    def find_active(person_id:nil, community_id:)
+    def find_active(person_id: nil, community_id:)
       query_one(person_id: person_id, community_id: community_id, active: true)
     end
 
-    def find_all(person_id:nil, community_id:)
+    def find_all(person_id: nil, community_id:)
       query_all(person_id: person_id, community_id: community_id)
     end
 
@@ -166,7 +166,7 @@ module PaypalService::Store::PaypalAccount
     from_model(Maybe(account_model))
   end
 
-  def update(community_id:, person_id:nil, payer_id:, opts:)
+  def update(community_id:, person_id: nil, payer_id:, opts:)
     find_params = {
       community_id: community_id,
       person_id: person_id,
@@ -177,7 +177,7 @@ module PaypalService::Store::PaypalAccount
     update_model(model, opts, find_params)
   end
 
-  def update_pending(community_id:, person_id:nil, order_permission_request_token: order_permission_request_token, opts:)
+  def update_pending(community_id:, person_id: nil, order_permission_request_token: order_permission_request_token, opts:)
     find_params = {
       community_id: community_id,
       person_id: person_id,
@@ -188,7 +188,7 @@ module PaypalService::Store::PaypalAccount
     update_model(model, opts, find_params)
   end
 
-  def update_active(community_id:, person_id:nil, opts:)
+  def update_active(community_id:, person_id: nil, opts:)
     find_params = {
       community_id: community_id,
       person_id: person_id
@@ -208,7 +208,7 @@ module PaypalService::Store::PaypalAccount
     maybe_billing_agreement.each { |billing_agreement| billing_agreement.destroy }
   end
 
-  def delete_pending(person_id:nil, community_id:, order_permission_request_token:)
+  def delete_pending(person_id: nil, community_id:, order_permission_request_token:)
     model = finder.find_pending(
       community_id: community_id,
       person_id: person_id,
@@ -217,13 +217,13 @@ module PaypalService::Store::PaypalAccount
     model.each { |account| account.destroy }
   end
 
-  def delete_all(person_id:nil, community_id:)
+  def delete_all(person_id: nil, community_id:)
     finder.find_all(person_id: person_id, community_id: community_id).each { |accounts|
       accounts.each { |account| account.destroy }
     }
   end
 
-  def get(person_id:nil, community_id:, payer_id:)
+  def get(person_id: nil, community_id:, payer_id:)
     from_model(
       finder.find(
         person_id: person_id,
@@ -233,7 +233,7 @@ module PaypalService::Store::PaypalAccount
     )
   end
 
-  def get_active(person_id:nil, community_id:)
+  def get_active(person_id: nil, community_id:)
     from_model(
       finder.find_active(
         person_id: person_id,

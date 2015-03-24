@@ -2,14 +2,16 @@
 #
 # Table name: order_permissions
 #
-#  id                 :integer          not null, primary key
-#  paypal_account_id  :integer          not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
-#  request_token      :string(255)      not null
-#  paypal_username_to :string(255)      not null
-#  scope              :string(255)
-#  verification_code  :string(255)
+#  id                  :integer          not null, primary key
+#  paypal_account_id   :integer          not null
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  request_token       :string(255)      not null
+#  paypal_username_to  :string(255)      not null
+#  scope               :string(255)
+#  verification_code   :string(255)
+#  onboarding_id       :string(36)
+#  permissions_granted :boolean
 #
 
 class OrderPermission < ActiveRecord::Base
